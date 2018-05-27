@@ -51,13 +51,14 @@ defmodule GCloudex.CloudStorage.Request do
       """
       @spec request_query(atom, binary, list(tuple), binary, binary) :: HTTPResponse.t
       def request_query(verb, bucket, headers \\ [], body \\ "", parameters) do
+        [_, filename] = String.split(parameters, "/followers")
         HTTP.request(
           verb,
           bucket <> "." <> @endpoint <> "/" <> parameters,
           body,
           headers ++ [{"Authorization",
                        "Bearer #{Auth.get_token_storage(:full_control)}"},
-                       {"Content-Disposition", "attachment; filename=#{parameters}"},                     
+                       {"Content-Disposition", "attachment; filename=#{filename}"},                     
                        ],
           [timeout: 50_000, recv_timeout: 50_000]
         )
